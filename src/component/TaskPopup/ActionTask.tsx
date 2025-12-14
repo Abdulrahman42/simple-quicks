@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, Activity } from "react";
 import VerDot from "@/assets/icon/ver-dot.svg";
 
-export function ActionTask({ onDelete }: { onDelete: () => void }) {
+const ActionTask = ({ onDelete }: { onDelete: () => void }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -32,3 +32,5 @@ export function ActionTask({ onDelete }: { onDelete: () => void }) {
     </div>
   );
 }
+
+export default ActionTask;

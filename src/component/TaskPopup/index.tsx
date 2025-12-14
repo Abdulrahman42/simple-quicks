@@ -11,6 +11,7 @@ export interface Task {
   description: string;
   checked: boolean;
   status: TaskStatus;
+  stikers: string[];
 }
 
 const initialTasks: Task[] = [
@@ -21,6 +22,7 @@ const initialTasks: Task[] = [
     description: "Create a modern and responsive design for the new homepage.",
     checked: true,
     status: "completed",
+    stikers: [],
   },
   {
     id: 2,
@@ -30,6 +32,7 @@ const initialTasks: Task[] = [
     description: "",
     checked: false,
     status: "open",
+    stikers: [],
   },
 ];
 const TaskPopup = () => {
@@ -42,7 +45,7 @@ const TaskPopup = () => {
     setTasks((prev) => {
       const updated = prev.map((msg) => ({
         ...msg,
-        dueDate:  msg.status === "new" ? new Date().toDateString() : msg.dueDate,
+        dueDate: msg.status === "new" ? new Date().toDateString() : msg.dueDate,
         status: msg.status === "new" ? "open" : msg.status,
       }));
       return [
@@ -54,16 +57,19 @@ const TaskPopup = () => {
           description: "",
           checked: false,
           status: "new",
+          stikers: [],
         },
       ];
     });
 
     setOpenItems((prev) => ({ ...prev, [id]: true }));
   };
+  const handleDeleteTask = (id: number) => {
+    setTasks((prev) => prev.filter((task) => task.id !== id));
+  };
 
   return (
     <>
-      {/* Popup */}
       <div className="fixed bottom-28 right-6 z-50 w-[734px] h-[737px] bg-white rounded-lg  shadow-xl px-8 py-6 animate-slide-up">
         <div className="flex justify-between">
           <HeaderTask />
@@ -78,6 +84,7 @@ const TaskPopup = () => {
           setTasks={setTasks}
           openItems={openItems}
           setOpenItems={setOpenItems}
+          handleDeleteTask={handleDeleteTask}
         />
       </div>
     </>

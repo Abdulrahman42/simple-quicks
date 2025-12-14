@@ -2,21 +2,22 @@ import { Activity, type Dispatch, type SetStateAction } from "react";
 
 import Expand from "@/assets/icon/expand.svg";
 
-import Pencil from "@/assets/icon/pencil.svg";
-import PencilBlack from "@/assets/icon/pencil-black.svg";
-
-import { ActionTask } from "./ActionTask";
+import ActionTask from "./ActionTask";
+import StikerTask from "./StikerTask";
 
 import type { Task } from ".";
 
 import { formatDDMMYYYY, getDaysLeft } from "../../helper/formatDate";
 import { DatePicker } from "../DatePicker";
+import DescriptionTask from "./DescriptionTask";
+import TitleTask from "./TitleTask";
 
 interface ListTaskProps {
   tasks: Task[];
   setTasks: Dispatch<SetStateAction<Task[]>>;
   openItems: Record<number, boolean>;
   setOpenItems: Dispatch<SetStateAction<Record<number, boolean>>>;
+  handleDeleteTask: (id: number) => void;
 }
 
 const ListTask = ({
@@ -24,6 +25,7 @@ const ListTask = ({
   setTasks,
   openItems,
   setOpenItems,
+  handleDeleteTask,
 }: ListTaskProps) => {
   const toggleItem = (id: number) => {
     setOpenItems((prev: Record<number, boolean>) => ({
@@ -58,29 +60,15 @@ const ListTask = ({
                   }
                   id={item.id.toString()}
                 />
-                <div className="w-auto">
-                  {item.status === "new" ? (
-                    <input
-                      autoFocus
-                      placeholder="Type Task Title"
-                      value={item.title}
-                      onChange={(e) =>
-                        updateTask(item.id, { title: e.target.value })
-                      }
-                      className="border border-[#828282] w-[380px] h-10 focus:ring-0 focus:border-[#828282] focus:outline-none active:border-[#828282] rounded px-3 py-2"
-                    />
-                  ) : (
-                    <p
-                      className={`font-semibold text-[#4F4F4F]  w-[356px] ${
-                        isCompleted ? "line-through text-[#828282]" : ""
-                      }`}>
-                      {item.title}
-                    </p>
-                  )}
-                </div>
+                <TitleTask
+                  value={item.title}
+                  status={item.status}
+                  isCompleted={isCompleted}
+                  onChange={(data) => updateTask(item.id, { title: data })}
+                />
               </div>
               <div className="flex items-center gap-2">
-                {(getDaysLeft(item.dueDate) > 0 && item.status != "new") && (
+                {getDaysLeft(item.dueDate) > 0 && item.status != "new" && (
                   <span className="text-[#EB5757]">
                     {getDaysLeft(item.dueDate)} Days Left
                   </span>
@@ -97,7 +85,7 @@ const ListTask = ({
                   onClick={() => toggleItem(item.id)}
                 />
                 <div className="cursor-pointer relative">
-                  <ActionTask onDelete={() => console.log("Share:")} />
+                  <ActionTask onDelete={() => handleDeleteTask(item.id)} />
                 </div>
               </div>
             </div>
@@ -111,17 +99,16 @@ const ListTask = ({
                     }
                   />
                 </div>
-                <div className="flex gap-[18px]">
-                  <img
-                    src={item.status == "new" ? PencilBlack : Pencil}
-                    alt="Pencil"
-                    width={15}
-                    height={15}
-                  />
-                  <p className="text-[#4F4F4F] ml-1">
-                    {item.description ? item.description : "No Description"}
-                  </p>
-                </div>
+                <DescriptionTask
+                  value={item.description}
+                  onChange={(data) =>
+                    updateTask(item.id, { description: data })
+                  }
+                />
+                <StikerTask
+                  value={item.stikers}
+                  onChange={(data) => updateTask(item.id, { stikers: data })}
+                />
               </div>
             </Activity>
           </div>

@@ -9,11 +9,12 @@ export function formatDate(date: Date) {
   const options: Intl.DateTimeFormatOptions = {
     month: "long",
     day: "2-digit",
-    year: "numeric"
+    year: "numeric",
   };
 
   if (isToday) return `Today, ${date.toLocaleDateString("en-US", options)}`;
-  if (isYesterday) return `Yesterday, ${date.toLocaleDateString("en-US", options)}`;
+  if (isYesterday)
+    return `Yesterday, ${date.toLocaleDateString("en-US", options)}`;
   return date.toLocaleDateString("en-US", options);
 }
 
@@ -43,8 +44,7 @@ export const getDaysLeft = (dueDate: string) => {
   today.setHours(0, 0, 0, 0);
   due.setHours(0, 0, 0, 0);
 
-  const diff =
-    (due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
-console.log(Math.ceil(diff));
+  const diff = (due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
+
   return Math.ceil(diff);
 };
